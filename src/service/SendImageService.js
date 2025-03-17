@@ -1,4 +1,4 @@
-const URL = "http://127.0.0.1:8000/";
+const URL = "http://127.0.0.1:8000/face/name";
 
 // Hàm chuyển base64 thành Blob
 const dataURLtoBlob = (dataURL) => {

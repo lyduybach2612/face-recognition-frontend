@@ -1,7 +1,9 @@
-import React, { useRef, useState } from "react"
-import Webcam from "react-webcam"
+import React, { useRef, useState } from "react";
+import Webcam from "react-webcam";
 import { sendImage } from "../service/SendImageService";
+import { addData, takePhoto } from "../service/AddData";
 const WebcamComponent = () => {
+  const [username, setUsername] = useState("");
   const webcamRef = useRef(null);
   const [result, setResult] = useState("");
   const capturePicture = async () => {
@@ -10,22 +12,62 @@ const WebcamComponent = () => {
       // console.log(imageSrc);
       const response = await sendImage(imageSrc);
       console.log(response);
-      setResult(response.detail.message);
+      if (response.code === 200) {
+        const username = response.data.username;
+        setResult(username);
+      } else if (response.code === 400) {
+        setResult("Không nhận dạng được người trong ảnh");
+      } else {
+        setResult("Bạn đã gặp lỗi trong quá trình upload file");
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleAddData = async () => {
+    const images = await takePhoto(webcamRef);
+    console.log(images);
+    await addData(username, images);
+  };
+
   return (
-    <div className = '' style={{textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center"}} >
-        <Webcam 
-        ref={webcamRef}
-        screenshotFormat="image/jpg"
-        audio={false}
-        />
-        <button style={{marginTop: "50px", width: "200px", height: "50px"}} onClick={capturePicture}>Chụp ảnh</button>
-        {result && <div>Kết quả nhận diện: {result}</div>}
+    <div
+      className=""
+      style={{
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Webcam ref={webcamRef} screenshotFormat="image/jpg" audio={false} />
+      <input style={{marginTop: "10px", height: "30px"}} type="text" onChange={(e) => setUsername(e.target.value)} />
+      <div className="">
+        <button
+          style={{
+            marginTop: "50px",
+            width: "200px",
+            height: "50px",
+            marginRight: "10px",
+          }}
+          onClick={capturePicture}
+        >
+          Chụp ảnh
+        </button>
+
+        <button
+          onClick={handleAddData}
+          style={{ marginTop: "50px", width: "200px", height: "50px" }}
+        >
+          Thêm dữ liệu
+        </button>
+      </div>
+      {result && (
+        <div style={{ marginTop: "50px" }}>Kết quả nhận diện: {result}</div>
+      )}
     </div>
-  )
+  );
 };
 
 export default WebcamComponent;
