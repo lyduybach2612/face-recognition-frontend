@@ -12,13 +12,15 @@ const WebcamComponent = () => {
       // console.log(imageSrc);
       const response = await sendImage(imageSrc);
       console.log(response);
-      if (response.code === 200) {
-        const username = response.data.username;
+      if (response.detail.code === 200) {
+        const username = response.detail.data.username;
         setResult(username);
-      } else if (response.code === 400) {
+      } else if (response.detail.code === 404) {
         setResult("Không nhận dạng được người trong ảnh");
-      } else {
-        setResult("Bạn đã gặp lỗi trong quá trình upload file");
+      } else if (response.detail.code === 400) {
+        setResult("Camera không nhận diện được khuôn mặt nào");
+      } else{
+        setResult("Lỗi không xác định");
       }
     } catch (error) {
       console.log(error);
@@ -27,8 +29,9 @@ const WebcamComponent = () => {
 
   const handleAddData = async () => {
     const images = await takePhoto(webcamRef);
-    console.log(images);
-    await addData(username, images);
+    const response = await addData(username, images);
+    console.log(response);
+
   };
 
   return (

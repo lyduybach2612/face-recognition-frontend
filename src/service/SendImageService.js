@@ -25,7 +25,7 @@ export const sendImage = async (image) => {
     const response = await fetch(URL, {
       method: "POST",
       body: formData, 
-      mode: "cors",
+      // mode: "cors",
     });
 
     return await response.json();

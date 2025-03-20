@@ -36,25 +36,34 @@ export const takePhoto = async (webcamRef) => {
 
 export const addData = async (username, images) => {
   try {
-    const formDatas = new FormData();
-    formDatas.append("username", username);
-
-    images.forEach((element) => {
-      formDatas.append(
+    if (!images || images.length < 5) {
+      throw new Error("You must upload at least 5 images");
+    }
+    const formData = new FormData();
+    
+    const data = {"username": username};
+    
+    formData.append("data", JSON.stringify(data)); // Đúng định dạng JSON
+    images.forEach((element, index) => {
+      formData.append(
         "images",
         dataURLtoBlob(element),
-        `photo_${Date.now()}_${Math.random()}.jpg`
+        `photo_${Date.now()}_${index}.jpg`
       );
     });
     // console.log(formDatas);
 
     const response = await fetch(URL, {
+      headers: {
+        "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>",
+      },
       method: "POST",
-      body: formDatas,
-      mode: "cors",
+      body: formData,
     });
 
-    return response;
+    // console.log(repon);
+    const json = await response.json();
+    return json;
   } catch (error) {
     throw error;
   }
