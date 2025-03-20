@@ -9,11 +9,11 @@ const WebcamComponent = () => {
   const capturePicture = async () => {
     try {
       const imageSrc = webcamRef.current.getScreenshot();
-      // console.log(imageSrc);
       const response = await sendImage(imageSrc);
       console.log(response);
-      if (response.code === 200) {
-        const username = response.data.username;
+      console.log(response.detail.code)
+      if (response.detail.code === 200) {
+        const username = response.detail.data.username;
         setResult(username);
       } else if (response.code === 400) {
         setResult("Không nhận dạng được người trong ảnh");
@@ -28,7 +28,8 @@ const WebcamComponent = () => {
   const handleAddData = async () => {
     const images = await takePhoto(webcamRef);
     console.log(images);
-    await addData(username, images);
+    const res = await addData(username, images);
+    console.log(res)
   };
 
   return (
