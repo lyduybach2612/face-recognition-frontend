@@ -15,10 +15,12 @@ const WebcamComponent = () => {
       if (response.detail.code === 200) {
         const username = response.detail.data.username;
         setResult(username);
-      } else if (response.code === 400) {
+      } else if (response.detail.code === 404) {
         setResult("Không nhận dạng được người trong ảnh");
-      } else {
-        setResult("Bạn đã gặp lỗi trong quá trình upload file");
+      } else if (response.detail.code === 400) {
+        setResult("Camera không nhận diện được khuôn mặt nào");
+      } else{
+        setResult("Lỗi không xác định");
       }
     } catch (error) {
       console.log(error);
