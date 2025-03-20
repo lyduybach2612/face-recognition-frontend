@@ -9,9 +9,9 @@ const WebcamComponent = () => {
   const capturePicture = async () => {
     try {
       const imageSrc = webcamRef.current.getScreenshot();
-      // console.log(imageSrc);
       const response = await sendImage(imageSrc);
       console.log(response);
+      console.log(response.detail.code)
       if (response.detail.code === 200) {
         const username = response.detail.data.username;
         setResult(username);
@@ -29,9 +29,9 @@ const WebcamComponent = () => {
 
   const handleAddData = async () => {
     const images = await takePhoto(webcamRef);
-    const response = await addData(username, images);
-    console.log(response);
-
+    console.log(images);
+    const res = await addData(username, images);
+    console.log(res)
   };
 
   return (
