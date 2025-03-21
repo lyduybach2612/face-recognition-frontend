@@ -54,29 +54,22 @@ export const takePhoto = async (webcamRef) => {
 
 export const addData = async (username, images) => {
   try {
-    const formDatas = new FormData();
-    //formDatas.append("username", username);
+    const formData = new FormData();
 
-    const data = {"username": username}
-    formDatas.append("data", JSON.stringify(data));
-
-      images.forEach((file) => {
-      formDatas.append("images", file); // "files" must match FastAPI's endpoint
+    const data = {username: username};
+    formData.append("data", JSON.stringify(data));
+    console.log(images);
+    images.forEach((file) => {
+      formData.append("images", file);
     });
 
-    // images.forEach((element) => {
-    //   formDatas.append(
-    //     "images",
-    //     dataURLtoBlob(element),
-    //     `photo_${Date.now()}_${Math.random()}.jpg`
-    //   );
-    // });
-    // console.log(formDatas);
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    
+
 
     const response = await fetch(URL, {
-      headers: {
-        "Content-Type": "multipart/form-data; boundary=<calculated when request is sent>",
-      },
       method: "POST",
       body: formData,
     });

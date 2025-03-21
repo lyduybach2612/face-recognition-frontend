@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { sendImage } from "../service/SendImageService";
-import { addData, takePhoto } from "../service/AddData";
+import {sendImage} from "../service/SendImageService";
+import { takePhoto, addData } from "../service/AddData";
 const WebcamComponent = () => {
   const [username, setUsername] = useState("");
   const webcamRef = useRef(null);
@@ -29,7 +29,7 @@ const WebcamComponent = () => {
 
   const handleAddData = async () => {
     const images = await takePhoto(webcamRef);
-    console.log(images);
+    // console.log(images);
     const res = await addData(username, images);
     console.log(res)
   };
